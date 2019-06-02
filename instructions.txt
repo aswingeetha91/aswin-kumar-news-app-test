@@ -1,0 +1,29 @@
+Android
+
+1.Update the bundle:
+
+react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+2.Install npm
+
+3.Connect the device 
+
+ 1.React-native run-android or run the project in android studio.
+ 
+iOS
+ 
+ 1.Update the bundle
+ 
+ react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'
+ 
+ 2.Install npm
+ 
+ 3.Add the udid and create a certificate and bundle identifier
+ 
+ 4.Install the certificate and provisional profile in your system.
+ 
+ 5.Connect the device
+ 
+  Testing -  React-native run-ios(Terminal)
+  
+  or directly run the app in xcode.

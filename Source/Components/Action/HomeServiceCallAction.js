@@ -23,27 +23,27 @@ export const callServiceFeedNewsData = () => {
 
     return dispatch => {
 
-        dispatch(serviceActionRestuarantDetailsPending())
+        dispatch(serviceActionNewsPending())
         axios.get(`https://newsapi.org/v2/top-headlines?country=de&category=business&apiKey=${API_KEY}`)
             .then(response => {
-                dispatch(serviceActionRestuarantDetailsSuccess(response.data.articles))
+                dispatch(serviceActionNewsSuccess(response.data.articles))
             })
             .catch(error => {
-                dispatch(serviceActionRestuarantDetailsError(error))
+                dispatch(serviceActionNewsError(error))
             });
     }
 }
 
-export const serviceActionRestuarantDetailsPending = () => ({
+export const serviceActionNewsPending = () => ({
     type: ActionTypes.NEWS_SERVICE_PENDING,
 })
 
-export const serviceActionRestuarantDetailsError = (error) => ({
+export const serviceActionNewsError = (error) => ({
     type: ActionTypes.NEWS_SERVICE_ERROR,
     error: error
 })
 
-export const serviceActionRestuarantDetailsSuccess = (newsData) => ({
+export const serviceActionNewsSuccess = (newsData) => ({
     type: ActionTypes.NEWS_SERVICE_SUCCESS,
     newsData: newsData,
 

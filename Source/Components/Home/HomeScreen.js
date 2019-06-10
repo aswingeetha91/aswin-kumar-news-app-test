@@ -1,11 +1,13 @@
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, FlatList, TextInput, ActivityIndicator, Image, TouchableOpacity, Alert, NetInfo, PermissionsAndroid } from 'react-native';
+import { Platform, StyleSheet, Text, View, FlatList,TouchableHighlight, TextInput,Dimensions, ActivityIndicator, Image, TouchableOpacity, Alert, NetInfo, PermissionsAndroid } from 'react-native';
 import DetailView from '../Details/Details';
 import store from '../Reducer/index';
 import { StackNavigator } from 'react-navigation';
 
 
+const widthScreen = Dimensions.get('window').width
+const heightScreen = Dimensions.get('window').height
 
 export class HomeScreen extends Component {
 
@@ -19,8 +21,9 @@ export class HomeScreen extends Component {
     navigate = props.navigation,
 
       this.state = {
-        articles: []
-
+        articles: [],
+        searchArticles: [],
+        text: ''
       };
 
 
@@ -41,6 +44,12 @@ export class HomeScreen extends Component {
       });
 
     }
+    else if (nextProps.type === 'Search') {
+      this.setState({
+        searchArticles:nextProps.searchData
+      });
+
+    }
     
 
   }
@@ -53,17 +62,17 @@ export class HomeScreen extends Component {
 
   }
 
-  
-
-  render() {
-
-    return (
-      <View style={styles.container}>
-      <View style={{ height:40}}>
-      <Text style={styles.header}> Your Daily Read </Text>
-</View>
-        <FlatList
-          data={this.state.articles}
+  searchText(text)
+  {
+    // if(text !== undefined)
+    //     this.props.callSearchAPI(text)
+    
+  }
+  renderMessage = () => {
+    if(this.state.searchArticles == undefined || this.state.searchArticles.length > 0){
+        return(
+          <FlatList
+          data= {this.state.searchArticles}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) =>
           <TouchableOpacity activeOpacity={0.5} onPress={() => this.newsDetailsSelect(item)} >
@@ -83,6 +92,74 @@ export class HomeScreen extends Component {
           }
           keyExtractor={item => item.author}
         />
+        );
+    }else{
+        return(
+          <FlatList
+          data= {this.state.articles}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item}) =>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => this.newsDetailsSelect(item)} >
+          <View style={styles.flatview}>
+          <View style = {styles.TitleView}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.author}>{item.author}</Text>
+            </View>
+            <View style = {styles.ImgView}>
+           
+      <Image style={styles.profile} resizeMode='contain' source={{ uri: item.urlToImage }}></Image>
+        
+              </View>
+          </View>
+          </TouchableOpacity>
+
+          }
+          keyExtractor={item => item.author}
+        />
+        );
+    }
+}
+
+handleChange (text) {
+ 
+}
+
+clearText(){
+  this.props.callServiceFeedNews()
+
+}
+  
+  searchAction(text) {
+    this.props.callSearchAPI(this.state.text)
+ }
+  render() {
+
+    return (
+      <View style={styles.container}>
+         <View style={{ height:50, flexDirection:'row' }}>
+         <View style = {{width:'85%',height:50,}}> 
+         <TextInput
+         clearButtonMode="always"
+        style={{marginTop:10,marginLeft:10, height:30,width:'90%', borderColor: 'gray', borderWidth: 1}}
+        onChangeText={(text) => this.setState({text})}
+        ref={component => this._textInput = component}
+        onSubmitEditing={() => {
+           this.clearText()
+         }}
+        // onChangeText = {this.searchText}
+        value={this.state.text}
+      />
+      </View>
+      <View style = {{width:'15%',height:50}}> 
+      <TouchableHighlight onPress={() => this.searchAction()}>
+    <Image style={{height:30,width:30,marginTop:10}} source={require('../Assets/search.png')} />
+</TouchableHighlight>
+
+      </View>
+</View>
+  
+  {this.renderMessage()}
+       
       </View>
     );
   }
